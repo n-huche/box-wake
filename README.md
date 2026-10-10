@@ -1,6 +1,8 @@
 # box-wake
 
-LaunchAgent do macOS que testa a porta SSH do box (via Tailscale). Se a porta não responder, abre `grokbot://app/v1/sidebar?tab=computer` para acordar a VM, devolve o foco ao app que estava na frente e encerra o Grok Bot alguns segundos depois.
+LaunchAgent do macOS que mantém o computador do Grok Bot (o box) acordado. O box congela depois de ~5 min ocioso; a cada `BOX_EVERY` segundos (padrão 240) o script abre `grokbot://app/v1/sidebar?tab=computer`, devolve o foco ao app que estava na frente e encerra o Grok Bot `BOX_QUIT_AFTER` segundos depois. Se o Grok Bot já estava aberto, ele só abre a aba e não encerra o app.
+
+Com 300 s ainda escapou uma pausa nos testes, por isso o padrão fica abaixo do timer de ociosidade.
 
 ## Instalar
 
@@ -20,12 +22,9 @@ Copia `box-wake.sh` para `~/.local/bin/` e o plist para `~/Library/LaunchAgents/
 
 | Variável | Padrão | O que faz |
 |---|---|---|
-| `BOX_HOST` | `cursor` | host do box no Tailscale |
-| `BOX_PORT` | `2222` | porta testada |
+| `BOX_EVERY` | `240` | segundos entre aberturas da aba do computador |
+| `BOX_QUIT_AFTER` | `5` | segundos até encerrar o app (só se ele não estava aberto) |
 | `BOX_APP` | `Grok Bot` | nome do processo do app no macOS |
-| `BOX_INTERVAL` | `3` | segundos entre testes |
-| `BOX_QUIT_AFTER` | `5` | segundos até encerrar o app depois de acordar |
-| `BOX_COOLDOWN` | `60` | intervalo mínimo entre tentativas de acordar |
 
 Para mudar, adicione um `EnvironmentVariables` no plist.
 
